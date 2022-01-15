@@ -18,6 +18,7 @@ class Contact(models.Model):
 
 
 class CustomUser(AbstractUser):
+    email = models.EmailField()
     bio = models.TextField(blank=True, null=True)
     avatar = models.ImageField(upload_to=get_path_upload_avatar,
                                blank=True,
