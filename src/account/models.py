@@ -23,6 +23,7 @@ class CustomUser(AbstractUser):
     avatar = models.ImageField(upload_to=get_path_upload_avatar,
                                blank=True,
                                null=True)
+    activ_email = models.BooleanField(default=False)
     following = models.ManyToManyField('self',
                                        through=Contact,
                                        related_name='followers',
