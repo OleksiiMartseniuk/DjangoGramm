@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Profile{% endblock %}
+{% block content %}
+<div class="row mt-4">
+    <div class="col-3">
+        <div class="text-center">
+            <img src="{%if request.user.avatar%} {{request.user.avatar.url}} {% else %} {% static 'img/images.png' %} {% endif %}" class="rounded-circle avatar_profile"  alt="">
+        </div>
+    </div>
+    <div class="col-6">
+        <div class="row">
+            <div class="col-6 text-center">
+                <h1>{{request.user.first_name}}</h1>
+            </div>
+            <div class="col-6 text-center">
+                <a href="#" class="btn btn-outline-secondary">Edit profile</a>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <ul class="mt-5 custom_ul" >
+                        <li class="custom_li font_ul">Publications {{object_list.count}}</li>
+                        <li class="custom_li font_ul">Subscribers {{request.user.rel_from_set.count}} </li>
+                        <li class="custom_li font_ul">Subscription {{request.user.rel_to_set.count}}</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-3"> </div>
+
+</div>
+
+<hr class="mt-5">
+
+
+<div class="row row-cols-1 row-cols-md-3 g-4">
+    {%for post in object_list%}
+      <div class="col">
+        <div class="card h-100">
+            <a href="#">
+                <img src="{{post.image.url}}" class="card-img-top" alt="...">
+            </a>
+        </div>
+      </div>
+    {% endfor %}
+</div>
+{% endblock %}
