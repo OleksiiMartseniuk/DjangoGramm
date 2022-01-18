@@ -1,5 +1,6 @@
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.mail import send_mail
+from django.db.models import Model
 from django.template.loader import render_to_string
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode
@@ -23,4 +24,10 @@ def sent_email_register(email: str, username: str, request: object):
               from_email='DjangoGram@email.com',
               recipient_list=[email])
 
+
+def activ_email(class_model: Model, **kwargs: dict):
+    try:
+        return class_model.objects.get(**kwargs)
+    except class_model.DoesNotExist:
+        return None
 
