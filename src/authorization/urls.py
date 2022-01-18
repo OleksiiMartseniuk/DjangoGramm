@@ -2,10 +2,9 @@ from django.urls import path
 
 from src.authorization.forms import LoginForm
 from django.contrib.auth import views as auth_views
-from src.authorization.views import index, RegistrationUser, ProfileEdit, ToRegistrationUserEmail
+from src.authorization.views import RegistrationUser, ProfileEdit, ToRegistrationUserEmail
 
 urlpatterns = [
-    path('', index, name='home'),
     path('login/', auth_views.LoginView.as_view(authentication_form=LoginForm), name='login'),
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
 

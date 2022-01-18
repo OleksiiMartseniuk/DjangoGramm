@@ -3,6 +3,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
+    path('', include('src.account.urls')),
     path('authorization/', include('src.authorization.urls')),
 ]
 if settings.DEBUG:

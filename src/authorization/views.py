@@ -1,5 +1,3 @@
-from django.shortcuts import render
-from django.contrib.auth.decorators import login_required
 from django.utils.http import urlsafe_base64_decode
 from django.views.generic import CreateView, UpdateView
 from django.contrib.messages.views import SuccessMessageMixin
@@ -9,12 +7,6 @@ from django.views.generic import TemplateView
 from .models import CustomUser
 from .forms import UserRegisterForm, ProfileCreateForm
 from ..base.services import sent_email_register
-
-
-@login_required()
-def index(request):
-    user1 = CustomUser.objects.get(id=1)
-    return render(request, 'base.html')
 
 
 class RegistrationUser(CreateView):
