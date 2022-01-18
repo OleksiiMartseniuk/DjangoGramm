@@ -13,7 +13,7 @@ def get_path_upload_avatar(instance, file):
 
 def sent_email_register(email: str, username: str, request: object):
     current_site = get_current_site(request)
-    massege = render_to_string('account/registration/register_email.html', {
+    massege = render_to_string('authorization/registration/register_email.html', {
         'username': username,
         'domain': current_site.domain,
         'uid': urlsafe_base64_encode(force_bytes(username)),
@@ -25,7 +25,7 @@ def sent_email_register(email: str, username: str, request: object):
               recipient_list=[email])
 
 
-def activ_email(class_model: Model, **kwargs: dict):
+def get_or_none(class_model: Model, **kwargs: dict):
     try:
         return class_model.objects.get(**kwargs)
     except class_model.DoesNotExist:

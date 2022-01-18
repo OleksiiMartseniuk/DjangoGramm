@@ -19,7 +19,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'src.account',
+    'src.authorization',
 
     'django.contrib.admin',
     'django.contrib.auth',
@@ -118,7 +118,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-AUTH_USER_MODEL = 'account.CustomUser'
+AUTH_USER_MODEL = 'authorization.CustomUser'
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
@@ -130,5 +130,5 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
-    'src.account.authentication.EmailAuthBackend',
+    'src.authorization.authentication.EmailAuthBackend',
 ]

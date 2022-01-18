@@ -1,8 +1,8 @@
-from django.urls import path, include
+from django.urls import path
 
-from src.account.forms import LoginForm
+from src.authorization.forms import LoginForm
 from django.contrib.auth import views as auth_views
-from src.account.views import index, RegistrationUser, ProfileEdit, ToRegistrationUserEmail
+from src.authorization.views import index, RegistrationUser, ProfileEdit, ToRegistrationUserEmail
 
 urlpatterns = [
     path('', index, name='home'),

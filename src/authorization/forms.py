@@ -3,7 +3,7 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.forms import UserCreationForm
 from django.core.exceptions import ValidationError
 
-from src.account.models import CustomUser
+from src.authorization.models import CustomUser
 from src.base.services import get_or_none, sent_email_register
 
 

@@ -19,7 +19,7 @@ def index(request):
 
 class RegistrationUser(CreateView):
     form_class = UserRegisterForm
-    template_name = 'account/registration/register.html'
+    template_name = 'authorization/registration/register.html'
     success_url = reverse_lazy('register_to_email')
 
     def form_valid(self, form):
@@ -30,12 +30,12 @@ class RegistrationUser(CreateView):
 
 
 class ToRegistrationUserEmail(TemplateView):
-    template_name = 'account/registration/register_done.html'
+    template_name = 'authorization/registration/register_done.html'
 
 
 class ProfileEdit(UpdateView, SuccessMessageMixin):
     form_class = ProfileCreateForm
-    template_name = 'account/profile/profile_create.html'
+    template_name = 'authorization/profile/profile_create.html'
     success_url = reverse_lazy('login')
     success_message = 'Data saved'
 
