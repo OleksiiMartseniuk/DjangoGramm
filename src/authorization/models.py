@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.urls import reverse
 
 from src.base.services import get_path_upload_avatar
 
@@ -28,3 +29,6 @@ class CustomUser(AbstractUser):
                                        through=Contact,
                                        related_name='followers',
                                        symmetrical=False)
+
+    def get_absolute_url(self):
+        return reverse('profile', kwargs={'slug': self.username})
