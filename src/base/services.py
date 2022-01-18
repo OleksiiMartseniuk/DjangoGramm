@@ -11,6 +11,11 @@ def get_path_upload_avatar(instance, file):
     return f'avatar/{instance.id}/{file}'
 
 
+def get_path_upload_image(instance, file):
+    """Построения пути к файлу(image), format: (media)/image/user_id/photo.jpg"""
+    return f'image/{instance.owner.id}/{file}'
+
+
 def sent_email_register(email: str, username: str, request: object):
     current_site = get_current_site(request)
     massege = render_to_string('authorization/registration/register_email.html', {
