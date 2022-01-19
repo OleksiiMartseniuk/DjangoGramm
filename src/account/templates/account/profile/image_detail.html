@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block title %}{{object.title}}{% endblock %}
+{% block content %}
+<div class="row mt-5">
+    <div class="col-6">
+        <img src="{{object.image.url}}" class="img-fluid" alt="...">
+        <br>
+        <a href="" class="m-2">
+            <button type="button" class="btn btn-outline-secondary rounded-circle ">Like {{object.like.count}}</button>
+        </a>
+
+    </div>
+    <div class="col-6">
+        <h3 class="text-center mb-3">Comments</h3>
+           {%for comment in comments_list%}
+        <div class="card mb-3">
+          <div class="card-body ">
+              <div class="row">
+                  <div class="col-2">
+                      <img src="{{comment.owner.avatar.url}}" class="rounded-circle avatar_base" alt="">
+                  </div>
+                  <div class="col-10">
+                      <h5>{{comment.owner.username}}</h5>
+                      <hr>
+                      <p class="text-secondary">{{comment.text}}</p>
+                  </div>
+              </div>
+          </div>
+        </div>
+        {%endfor%}
+         <form action="" method="post">
+            {% csrf_token %}
+            {{ form|crispy }}
+            <input class="btn btn-secondary mt-2" type="submit" value="Send">
+         </form>
+    </div>
+</div>
+
+{% endblock %}
