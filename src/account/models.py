@@ -37,4 +37,19 @@ class Post(models.Model):
         super(Post, self).save(*args, **kwargs)
 
     def get_absolute_url(self):
-        return reverse('detail', kwargs={'slug': self.slug})
+        return reverse('detail_image', kwargs={'slug': self.slug})
+
+
+class Comment(models.Model):
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL,
+                              related_name='comments',
+                              on_delete=models.CASCADE)
+    post = models.ForeignKey(Post,
+                             related_name='comments',
+                             on_delete=models.CASCADE)
+    text = models.TextField(max_length=500)
+    create = models.DateTimeField(auto_now_add=True)
+    active = models.BooleanField(default=True)
+
+    def __str__(self):
+        return f'comment: {self.post.title}, owner: {self.owner.username}'
