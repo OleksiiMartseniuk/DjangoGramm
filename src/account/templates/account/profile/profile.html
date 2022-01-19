@@ -39,8 +39,8 @@
     {%for post in object_list%}
       <div class="col">
         <div class="card h-100">
-            <a href="#">
-                <img src="{{post.image.url}}" class="card-img-top" alt="...">
+            <a href="{{post.get_absolute_url}}">
+                <img src="{{post.image.url}}" class="card-img-top image" alt="...">
             </a>
         </div>
       </div>
