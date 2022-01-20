@@ -25,7 +25,7 @@ class ToRegistrationUserEmail(TemplateView):
     template_name = 'authorization/registration/register_done.html'
 
 
-class ProfileEdit(UpdateView, SuccessMessageMixin):
+class ProfileEdit(SuccessMessageMixin, UpdateView):
     form_class = ProfileCreateForm
     template_name = 'authorization/profile/profile_create.html'
     success_url = reverse_lazy('login')
