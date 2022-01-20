@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Delete{% endblock %}
+
+{% block content %}
+
+<div class="container mt-2">
+         <div class="row">
+             <div class="col-md-8 offset-md-2">
+                 <form method="post">{% csrf_token %}
+                        <h2>Are you sure you want to delete comment "{{ object.text }}"?</h2>
+                        <input class="btn btn-danger mt-2" type="submit" value="Confirm">
+                        <a href="{% url 'detail_image' object.post.title %}" class="btn btn-outline-secondary mt-2">Cancellation</a>
+                 </form>
+             </div>
+         </div>
+</div>
+
+{% endblock %}

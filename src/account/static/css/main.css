@@ -38,5 +38,8 @@
 
 .image_detail {
     height: 800px;
+}
 
+.aside {
+    float: right;
 }

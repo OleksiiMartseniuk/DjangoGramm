@@ -7,28 +7,42 @@
     <div class="col-6">
         <img src="{{object.image.url}}" class="img-fluid" alt="...">
         <br>
-        <a href="" class="m-2">
-            <button type="button" class="btn btn-outline-secondary rounded-circle ">Like {{object.like.count}}</button>
-        </a>
-
+        <div class="row mt-3">
+            <div class="col-6">
+                <a href="#" class="m-2">
+                    <button type="button" class="btn btn-outline-secondary rounded-circle ">Like {{object.like.count}}</button>
+                 </a>
+            </div>
+            <div class="col-6">
+                <a href="{% url 'delete_image' object.id %}">
+                    <button type="button" class="btn btn-outline-danger aside">Delete</button>
+                </a>
+            </div>
+        </div>
     </div>
     <div class="col-6">
         <h3 class="text-center mb-3">Comments</h3>
-           {%for comment in comments_list%}
-        <div class="card mb-3">
-          <div class="card-body ">
-              <div class="row">
-                  <div class="col-2">
-                      <img src="{{comment.owner.avatar.url}}" class="rounded-circle avatar_base" alt="">
-                  </div>
-                  <div class="col-10">
-                      <h5>{{comment.owner.username}}</h5>
-                      <hr>
-                      <p class="text-secondary">{{comment.text}}</p>
+        {%for comment in comments_list%}
+            <div class="card mb-3">
+              <div class="card-body ">
+                  <div class="row">
+                      <div class="col-2">
+                          <img src="{{comment.owner.avatar.url}}" class="rounded-circle avatar_base" alt="">
+                      </div>
+                      <div class="col-10">
+                          {% if comment.owner == request.user%}
+                          <a href="{% url 'delete_comment' comment.id %}">
+                              <button type="button" class="btn-close aside" data-bs-dismiss="alert" aria-label="Close"></button>
+                          </a>
+                          {% endif %}
+                          <h5>{{comment.owner.first_name}}</h5>
+                          <hr>
+                          <p class="text-secondary">{{comment.text}}</p>
+                          <p class="text-secondary">{{comment.create|date:"Y-m-d H:s"}}</p>
+                      </div>
                   </div>
               </div>
-          </div>
-        </div>
+            </div>
         {%endfor%}
          <form action="" method="post">
             {% csrf_token %}
