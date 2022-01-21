@@ -43,3 +43,12 @@
 .aside {
     float: right;
 }
+
+.avatar_subs {
+    height:50px;
+    width:50px;
+}
+
+.li_menu {
+    cursor: pointer;
+}

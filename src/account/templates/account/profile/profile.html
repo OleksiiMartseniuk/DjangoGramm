@@ -21,8 +21,8 @@
                 <div class="col-12">
                     <ul class="mt-5 custom_ul" >
                         <li class="custom_li font_ul">Publications {{object_list.count}}</li>
-                        <li class="custom_li font_ul">Subscribers {{request.user.rel_from_set.count}} </li>
-                        <li class="custom_li font_ul">Subscription {{request.user.rel_to_set.count}}</li>
+                        <li class="custom_li font_ul li_menu" data-bs-toggle="modal" data-bs-target="#Subscribers">Subscribers {{request.user.rel_to_set.count}}  </li>
+                        <li class="custom_li font_ul li_menu" data-bs-toggle="modal" data-bs-target="#Subscription">Subscription {{request.user.rel_from_set.count}}</li>
                     </ul>
                 </div>
             </div>
@@ -45,5 +45,82 @@
         </div>
       </div>
     {% endfor %}
+</div>
+
+
+
+<!-- Modal Subscription-->
+<div class="modal fade" id="Subscription" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="staticBackdropLabel1">Subscription</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+          {% for subscriber in request.user.rel_from_set.all %}
+             <div class="card mb-3">
+              <div class="card-body ">
+                  <div class="row">
+                      <div class="col-2">
+                          <a href="">
+                              <img src="{{subscriber.user_to.avatar.url}}" class="rounded-circle avatar_subs" alt="">
+                          </a>
+                      </div>
+                      <div class="col-6">
+                          <a href="">{{subscriber.user_to.first_name}}</a>
+                      </div>
+                      <div class="col-4">
+                          {%if subscriber.user_to in request.user.rel_to_set.all %}
+                          <a href="#" class="btn btn-outline-secondary">subscribe</a>
+                          {%else%}
+                          <a href="#" class="btn btn-outline-secondary">subscriptions</a>
+                          {%endif%}
+                      </div>
+                  </div>
+              </div>
+            </div>
+          {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Modal  Subscribers-->
+<div class="modal fade" id="Subscribers" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="staticBackdropLabel2">Subscribers</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+          {% for subscriber in request.user.rel_to_set.all %}
+             <div class="card mb-3">
+              <div class="card-body ">
+                  <div class="row">
+                      <div class="col-2">
+                          <a href="">
+                              <img src="{{subscriber.user_from.avatar.url}}" class="rounded-circle avatar_subs" alt="">
+                          </a>
+                      </div>
+                      <div class="col-6">
+                          <a href="">{{subscriber.user_from.first_name}}</a>
+                      </div>
+                      <div class="col-4">
+                          {%if subscriber.user_from in request.user.rel_to_set.all %}
+                          <a href="#" class="btn btn-outline-secondary">subscribe</a>
+                          {%else%}
+                          <a href="#" class="btn btn-outline-secondary">subscriptions</a>
+                          {%endif%}
+                      </div>
+                  </div>
+              </div>
+            </div>
+          {% endfor %}
+      </div>
+    </div>
+  </div>
 </div>
 {% endblock %}
