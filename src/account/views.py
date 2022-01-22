@@ -1,22 +1,29 @@
+import json
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib import messages
 from django.shortcuts import render
 from django.urls import reverse, reverse_lazy
+from django.views import View
 from django.views.generic import ListView, DetailView, CreateView, DeleteView
 from django.views.generic.edit import FormMixin
 
 from src.account.forms import CommentForm, PostCreateForm
 from src.account.models import Post, Comment
 from src.authorization.models import CustomUser
+from django.http import JsonResponse
+
+from src.base.services import like
 
 
 @login_required()
 def index(request):
     # user = CustomUser.objects.get(id=1)
     # user2 = CustomUser.objects.get(id=2)
-    # user.following.add(user2)
+    # user3 = CustomUser.objects.get(id=3)
+    # user.following.add(user3)
+    # user2.following.add(user)
     return render(request, 'base.html')
 
 
@@ -101,3 +108,9 @@ class CommentDeleteView(LoginRequiredMixin, DeleteView):
 
     def get_queryset(self):
         return self.request.user.comments.all()
+
+
+class LikeImage(View):
+    def post(self, request, *args, **kwargs):
+        data = json.loads(request.body)
+        return JsonResponse(like(data, request, Post))
