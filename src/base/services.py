@@ -36,3 +36,14 @@ def get_or_none(class_model: Model, **kwargs: dict):
     except class_model.DoesNotExist:
         return None
 
+
+def like(data: dict, request: object, model_post: Model) -> dict:
+    post = get_or_none(model_post, id=data['id'])
+    if post is None:
+        return {'status': 'error'}
+    if data['action'] == 'like':
+        post.like.add(request.user)
+        return {'status': 'ok'}
+    elif data['action'] == 'unlike':
+        post.like.remove(request.user)
+        return {'status': 'ok'}
