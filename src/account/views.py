@@ -9,7 +9,7 @@ from django.views import View
 from django.views.generic import ListView, DetailView, CreateView, DeleteView, UpdateView
 from django.views.generic.edit import FormMixin
 
-from src.account.forms import CommentForm, PostCreateForm
+from src.account.forms import CommentForm, PostCreateForm, EditProfileForm
 from src.account.models import Post, Comment
 from src.authorization.models import CustomUser
 from django.http import JsonResponse
@@ -37,6 +37,18 @@ class ProfileListView(LoginRequiredMixin, ListView):
     def get_context_data(self, *, object_list=None, **kwargs):
         kwargs['section'] = 'profile'
         return super(ProfileListView, self).get_context_data(**kwargs)
+
+
+class EditProfileUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
+    form_class = EditProfileForm
+    template_name = 'account/profile/profile_edit.html'
+    success_message = 'Profile updated'
+
+    def get_object(self, queryset=None):
+        return self.request.user
+
+    def get_success_url(self):
+        return reverse('profile', kwargs={'username': self.request.user.username})
 
 
 class ImageDetailView(LoginRequiredMixin, DetailView, FormMixin):
