@@ -1,6 +1,7 @@
 from django import forms
 
 from src.account.models import Comment, Post
+from src.authorization.models import CustomUser
 
 
 class CommentForm(forms.ModelForm):
@@ -20,3 +21,9 @@ class PostCreateForm(forms.ModelForm):
         widgets = {
             'owner': forms.HiddenInput(),
         }
+
+
+class EditProfileForm(forms.ModelForm):
+    class Meta:
+        model = CustomUser
+        fields = ('first_name', 'last_name', 'bio', 'avatar')
