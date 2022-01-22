@@ -6,7 +6,7 @@ from django.contrib import messages
 from django.shortcuts import render
 from django.urls import reverse, reverse_lazy
 from django.views import View
-from django.views.generic import ListView, DetailView, CreateView, DeleteView
+from django.views.generic import ListView, DetailView, CreateView, DeleteView, UpdateView
 from django.views.generic.edit import FormMixin
 
 from src.account.forms import CommentForm, PostCreateForm
@@ -29,7 +29,7 @@ def index(request):
 
 class ProfileListView(LoginRequiredMixin, ListView):
     paginate_by = 6
-    template_name = 'account/profile/profile.html'
+    template_name = 'account/profile/profile_list.html'
 
     def get_queryset(self):
         return self.request.user.posts.filter(status='published').all()
@@ -41,7 +41,7 @@ class ProfileListView(LoginRequiredMixin, ListView):
 
 class ImageDetailView(LoginRequiredMixin, DetailView, FormMixin):
     model = Post
-    template_name = 'account/image/detail_image.html'
+    template_name = 'account/image/image_detail.html'
     form_class = CommentForm
 
     def get_success_url(self):
@@ -72,7 +72,7 @@ class ImageDetailView(LoginRequiredMixin, DetailView, FormMixin):
 
 class PostCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     form_class = PostCreateForm
-    template_name = 'account/image/create_image.html'
+    template_name = 'account/image/image_create.html'
     success_url = reverse_lazy('home')
     success_message = 'Image add'
 
@@ -87,7 +87,7 @@ class PostCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
 
 
 class PostDeleteView(LoginRequiredMixin, DeleteView):
-    template_name = 'account/image/delete_image.html'
+    template_name = 'account/image/image_delete.html'
     success_message = 'Images deleted successfully'
 
     def get_success_url(self):
@@ -99,7 +99,7 @@ class PostDeleteView(LoginRequiredMixin, DeleteView):
 
 
 class CommentDeleteView(LoginRequiredMixin, DeleteView):
-    template_name = 'account/comment/delete_comment.html'
+    template_name = 'account/comment/comment_delete.html'
     success_message = 'Comment deleted successfully'
 
     def get_success_url(self):
