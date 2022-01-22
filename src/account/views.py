@@ -41,7 +41,7 @@ class ProfileListView(LoginRequiredMixin, ListView):
 
 class ImageDetailView(LoginRequiredMixin, DetailView, FormMixin):
     model = Post
-    template_name = 'account/profile/image_detail.html'
+    template_name = 'account/image/detail_image.html'
     form_class = CommentForm
 
     def get_success_url(self):
@@ -72,7 +72,7 @@ class ImageDetailView(LoginRequiredMixin, DetailView, FormMixin):
 
 class PostCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     form_class = PostCreateForm
-    template_name = 'account/profile/create_image.html'
+    template_name = 'account/image/create_image.html'
     success_url = reverse_lazy('home')
     success_message = 'Image add'
 
@@ -87,7 +87,7 @@ class PostCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
 
 
 class PostDeleteView(LoginRequiredMixin, DeleteView):
-    template_name = 'account/profile/delete_image.html'
+    template_name = 'account/image/delete_image.html'
     success_message = 'Images deleted successfully'
 
     def get_success_url(self):
@@ -99,7 +99,7 @@ class PostDeleteView(LoginRequiredMixin, DeleteView):
 
 
 class CommentDeleteView(LoginRequiredMixin, DeleteView):
-    template_name = 'account/profile/delete_comment.html'
+    template_name = 'account/comment/delete_comment.html'
     success_message = 'Comment deleted successfully'
 
     def get_success_url(self):
