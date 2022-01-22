@@ -15,7 +15,7 @@
                 <h1>{{request.user.first_name}}</h1>
             </div>
             <div class="col-6 text-center">
-                <a href="#" class="btn btn-outline-secondary">Edit profile</a>
+                <a href="{% url 'profile_edit' request.user.username %}" class="btn btn-outline-secondary">Edit profile</a>
             </div>
             <div class="row">
                 <div class="col-12">
@@ -46,8 +46,24 @@
       </div>
     {% endfor %}
 </div>
+<hr>
+<div class="m-3 aside">
+     <nav aria-label="Page navigation example">
+          <ul class="pagination">
+               {% if page_obj.has_previous %}
+                    <li class="page-item"><a class="page-link link-secondary" href="?page=1">&laquo; First</a></li>
+                    <li class="page-item"><a class="page-link link-secondary" href="?page={{ page_obj.previous_page_number }}">Previous</a></li>
+               {% endif %}
 
+                <li class="page-item"><a class="page-link link-secondary" href="#">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</a></li>
 
+                {% if page_obj.has_next %}
+                    <li class="page-item"><a class="page-link link-secondary" href="?page={{ page_obj.next_page_number }}">Next</a></li>
+                    <li class="page-item"><a class="page-link link-secondary" href="?page={{ page_obj.paginator.num_pages }}">Last &raquo;</a></li>
+                {% endif %}
+          </ul>
+     </nav>
+</div>
 
 <!-- Modal Subscription-->
 <div class="modal fade" id="Subscription" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
