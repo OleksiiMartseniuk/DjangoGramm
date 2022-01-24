@@ -13,8 +13,9 @@ from src.account.forms import CommentForm, PostCreateForm, EditProfileForm
 from src.account.models import Post, Comment
 from src.authorization.models import CustomUser
 from django.http import JsonResponse
+from django.http import HttpResponseRedirect
 
-from src.base.services import like
+from src.base.services import like, subscription, delete_followers
 
 
 @login_required()
@@ -49,6 +50,18 @@ class EditProfileUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView)
 
     def get_success_url(self):
         return reverse('profile', kwargs={'username': self.request.user.username})
+
+
+class SubscriptionHandler(LoginRequiredMixin, View):
+    def post(self, request, *args, **kwargs):
+        data = json.loads(request.body)
+        return JsonResponse(subscription(data, request, CustomUser))
+
+
+class FollowersHandler(LoginRequiredMixin, View):
+    def get(self, request, *args, **kwargs):
+        delete_followers(request, kwargs['user_id'], CustomUser)
+        return HttpResponseRedirect(reverse('profile', kwargs={'username': self.request.user.username}))
 
 
 class ImageDetailView(LoginRequiredMixin, DetailView, FormMixin):
@@ -122,7 +135,7 @@ class CommentDeleteView(LoginRequiredMixin, DeleteView):
         return self.request.user.comments.all()
 
 
-class LikeImage(View):
+class LikeImageHandler(LoginRequiredMixin, View):
     def post(self, request, *args, **kwargs):
         data = json.loads(request.body)
         return JsonResponse(like(data, request, Post))
