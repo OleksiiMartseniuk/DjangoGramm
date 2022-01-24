@@ -9,7 +9,7 @@
         <br>
         <div class="row mt-3">
             <div class="col-6">
-                <a  href="#" class="m-2">
+                <a  href="" class="m-2">
                     <button  id="like" data-id_image="{{ object.id }}" data-action="{% if request.user in object.like.all %}un{% endif %}like" data-id_total="{{ object.like.count }}"  type="button" class="btn btn-{% if request.user in object.like.all %}danger{%else%}outline-secondary{%endif%} rounded-circle">
                         Like {{object.like.count}}
                     </button>

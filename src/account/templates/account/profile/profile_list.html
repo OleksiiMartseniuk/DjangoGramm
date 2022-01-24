@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load account_tags %}
 
 {% block title %}Profile{% endblock %}
 {% block content %}
@@ -21,7 +22,7 @@
                 <div class="col-12">
                     <ul class="mt-5 custom_ul" >
                         <li class="custom_li font_ul">Publications {{object_list.count}}</li>
-                        <li class="custom_li font_ul li_menu" data-bs-toggle="modal" data-bs-target="#Subscribers">Subscribers {{request.user.rel_to_set.count}}  </li>
+                        <li class="custom_li font_ul li_menu" data-bs-toggle="modal" data-bs-target="#Subscribers">Followers {{request.user.rel_to_set.count}}  </li>
                         <li class="custom_li font_ul li_menu" data-bs-toggle="modal" data-bs-target="#Subscription">Subscription {{request.user.rel_from_set.count}}</li>
                     </ul>
                 </div>
@@ -87,10 +88,11 @@
                           <a href="">{{subscriber.user_to.first_name}}</a>
                       </div>
                       <div class="col-4">
-                          {%if subscriber.user_to in request.user.rel_to_set.all %}
-                          <a href="#" class="btn btn-outline-secondary">subscribe</a>
+                          {% get_subscription_in_subscribers subscriber.user_to request.user.id as status%}
+                          {%if status %}
+                            <button class="btn btn-outline-secondary">Subscriptions</button>
                           {%else%}
-                          <a href="#" class="btn btn-outline-secondary">subscriptions</a>
+                            <button class="btn btn-danger">Subscribe</button>
                           {%endif%}
                       </div>
                   </div>
@@ -125,11 +127,7 @@
                           <a href="">{{subscriber.user_from.first_name}}</a>
                       </div>
                       <div class="col-4">
-                          {%if subscriber.user_from in request.user.rel_to_set.all %}
-                          <a href="#" class="btn btn-outline-secondary">subscribe</a>
-                          {%else%}
-                          <a href="#" class="btn btn-outline-secondary">subscriptions</a>
-                          {%endif%}
+                            <button class="btn btn-outline-secondary">Delete</button>
                       </div>
                   </div>
               </div>
