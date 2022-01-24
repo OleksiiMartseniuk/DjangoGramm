@@ -47,3 +47,22 @@ def like(data: dict, request: object, model_post: Model) -> dict:
     elif data['action'] == 'unlike':
         post.like.remove(request.user)
         return {'status': 'ok'}
+
+
+def subscription(data: dict, request: object, model_user: Model) -> dict:
+    user_from = request.user
+    user_to = model_user.objects.get(id=data['id'])
+    if data['status']:
+        user_from.following.add(user_to)
+        return {'status': 'ok'}
+    elif not data['status']:
+        user_from.following.remove(user_to)
+        return {'status': 'ok'}
+    return {'status': 'error'}
+
+
+def delete_followers(request: object, user_id: int, model_user: Model):
+    user_from = request.user
+    user_to = get_or_none(model_user, id=user_id)
+    if user_to:
+        user_to.following.remove(user_from)
