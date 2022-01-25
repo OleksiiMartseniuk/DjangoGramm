@@ -10,6 +10,7 @@ from ..base.services import sent_email_register
 
 
 class RegistrationUser(CreateView):
+    """Registration user on email"""
     form_class = UserRegisterForm
     template_name = 'authorization/registration/register.html'
     success_url = reverse_lazy('register_to_email')
@@ -22,10 +23,12 @@ class RegistrationUser(CreateView):
 
 
 class ToRegistrationUserEmail(TemplateView):
+    """Template done register email"""
     template_name = 'authorization/registration/register_done.html'
 
 
 class ProfileEdit(SuccessMessageMixin, UpdateView):
+    """Create profile user"""
     form_class = ProfileCreateForm
     template_name = 'authorization/profile/profile_create.html'
     success_url = reverse_lazy('login')

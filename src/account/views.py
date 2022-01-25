@@ -29,6 +29,7 @@ def index(request):
 
 
 class ProfileListView(LoginRequiredMixin, ListView):
+    """Profile user"""
     paginate_by = 6
     template_name = 'account/profile/profile_list.html'
 
@@ -41,6 +42,7 @@ class ProfileListView(LoginRequiredMixin, ListView):
 
 
 class EditProfileUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
+    """Edit profile user"""
     form_class = EditProfileForm
     template_name = 'account/profile/profile_edit.html'
     success_message = 'Profile updated'
@@ -53,18 +55,51 @@ class EditProfileUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView)
 
 
 class SubscriptionHandler(LoginRequiredMixin, View):
+    """Handler button subscription"""
     def post(self, request, *args, **kwargs):
         data = json.loads(request.body)
         return JsonResponse(subscription(data, request, CustomUser))
 
 
 class FollowersHandler(LoginRequiredMixin, View):
+    """Handler button followers"""
     def get(self, request, *args, **kwargs):
         delete_followers(request, kwargs['user_id'], CustomUser)
         return HttpResponseRedirect(reverse('profile', kwargs={'username': self.request.user.username}))
 
 
+class PostCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
+    """Create Post"""
+    form_class = PostCreateForm
+    template_name = 'account/image/image_create.html'
+    success_url = reverse_lazy('home')
+    success_message = 'Image add'
+
+    def get_initial(self):
+        initial = super().get_initial()
+        initial['owner'] = self.request.user
+        return initial
+
+    def get_context_data(self, **kwargs):
+        kwargs['section'] = 'create'
+        return super(PostCreateView, self).get_context_data(**kwargs)
+
+
+class PostDeleteView(LoginRequiredMixin, DeleteView):
+    """Delete Post"""
+    template_name = 'account/image/image_delete.html'
+    success_message = 'Images deleted successfully'
+
+    def get_success_url(self):
+        messages.success(self.request, self.success_message)
+        return reverse('profile', kwargs={'username': self.request.user.username})
+
+    def get_queryset(self):
+        return self.request.user.posts.all()
+
+
 class ImageDetailView(LoginRequiredMixin, DetailView, FormMixin):
+    """Image detail"""
     model = Post
     template_name = 'account/image/image_detail.html'
     form_class = CommentForm
@@ -95,35 +130,8 @@ class ImageDetailView(LoginRequiredMixin, DetailView, FormMixin):
         return super(ImageDetailView, self).form_valid(form)
 
 
-class PostCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
-    form_class = PostCreateForm
-    template_name = 'account/image/image_create.html'
-    success_url = reverse_lazy('home')
-    success_message = 'Image add'
-
-    def get_initial(self):
-        initial = super().get_initial()
-        initial['owner'] = self.request.user
-        return initial
-
-    def get_context_data(self, **kwargs):
-        kwargs['section'] = 'create'
-        return super(PostCreateView, self).get_context_data(**kwargs)
-
-
-class PostDeleteView(LoginRequiredMixin, DeleteView):
-    template_name = 'account/image/image_delete.html'
-    success_message = 'Images deleted successfully'
-
-    def get_success_url(self):
-        messages.success(self.request, self.success_message)
-        return reverse('profile', kwargs={'username': self.request.user.username})
-
-    def get_queryset(self):
-        return self.request.user.posts.all()
-
-
 class CommentDeleteView(LoginRequiredMixin, DeleteView):
+    """Delete Comment"""
     template_name = 'account/comment/comment_delete.html'
     success_message = 'Comment deleted successfully'
 
@@ -136,6 +144,7 @@ class CommentDeleteView(LoginRequiredMixin, DeleteView):
 
 
 class LikeImageHandler(LoginRequiredMixin, View):
+    """Handler button like"""
     def post(self, request, *args, **kwargs):
         data = json.loads(request.body)
         return JsonResponse(like(data, request, Post))
