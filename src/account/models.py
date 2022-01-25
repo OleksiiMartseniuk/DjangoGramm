@@ -39,6 +39,9 @@ class Post(models.Model):
     def get_absolute_url(self):
         return reverse('detail_image', kwargs={'slug': self.slug})
 
+    class Meta:
+        ordering = ['create']
+
 
 class Comment(models.Model):
     owner = models.ForeignKey(settings.AUTH_USER_MODEL,
