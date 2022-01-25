@@ -130,6 +130,13 @@ class ImageDetailView(LoginRequiredMixin, DetailView, FormMixin):
         return super(ImageDetailView, self).form_valid(form)
 
 
+class LikeImageHandler(LoginRequiredMixin, View):
+    """Handler button like"""
+    def post(self, request, *args, **kwargs):
+        data = json.loads(request.body)
+        return JsonResponse(like(data, request, Post))
+
+
 class CommentDeleteView(LoginRequiredMixin, DeleteView):
     """Delete Comment"""
     template_name = 'account/comment/comment_delete.html'
@@ -142,9 +149,3 @@ class CommentDeleteView(LoginRequiredMixin, DeleteView):
     def get_queryset(self):
         return self.request.user.comments.all()
 
-
-class LikeImageHandler(LoginRequiredMixin, View):
-    """Handler button like"""
-    def post(self, request, *args, **kwargs):
-        data = json.loads(request.body)
-        return JsonResponse(like(data, request, Post))
