@@ -16,9 +16,12 @@
                 </a>
             </div>
             <div class="col-6">
+                {%if request.user == object.owner%}
                 <a href="{% url 'delete_image' object.id %}">
                     <button type="button" class="btn btn-outline-danger aside">Delete</button>
                 </a>
+                {%else%}
+                {%endif%}
             </div>
         </div>
     </div>
