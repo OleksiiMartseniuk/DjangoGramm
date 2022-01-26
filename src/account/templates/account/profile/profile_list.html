@@ -3,7 +3,14 @@
 
 {% load account_tags %}
 
-{% block title %}Profile{% endblock %}
+{% block title %}
+{%if request.user == user%}
+    Profile
+{%else%}
+    {{user.username}}
+{%endif%}
+{% endblock %}
+
 {% block content %}
 <div class="row mt-4">
     <div class="col-3">
@@ -100,7 +107,7 @@
                         {%if request.user == subscriber.user_to%}
                         <img src="{{subscriber.user_to.avatar.url}}" class="rounded-circle avatar_subs" alt="">
                         {%else%}
-                          <a href="">
+                          <a href="{% url 'profile' subscriber.user_to.username %}">
                               <img src="{{subscriber.user_to.avatar.url}}" class="rounded-circle avatar_subs" alt="">
                           </a>
                         {%endif%}
@@ -109,7 +116,7 @@
                         {%if request.user == subscriber.user_to%}
                             <p>{{subscriber.user_to.first_name}}</p>
                         {%else%}
-                          <a href="">{{subscriber.user_to.first_name}}</a>
+                          <a href="{% url 'profile' subscriber.user_to.username %}">{{subscriber.user_to.first_name}}</a>
                         {%endif%}
                       </div>
                       <div class="col-4">     
@@ -156,7 +163,7 @@
                             <img src="{{subscriber.user_from.avatar.url}}" class="rounded-circle avatar_subs" alt="">
                         {%else%}
                         
-                          <a href="">
+                          <a href="{% url 'profile' subscriber.user_from.username %}">
                               <img src="{{subscriber.user_from.avatar.url}}" class="rounded-circle avatar_subs" alt="">
                           </a>
                         {%endif%}
@@ -165,7 +172,7 @@
                         {%if request.user == subscriber.user_from%}
                             <p>{{subscriber.user_from.first_name}}</p>
                         {%else%}
-                          <a href="">{{subscriber.user_from.first_name}}</a>
+                          <a href="{% url 'profile' subscriber.user_from.username %}">{{subscriber.user_from.first_name}}</a>
                         {%endif%}
                       </div>
                       <div class="col-4">
