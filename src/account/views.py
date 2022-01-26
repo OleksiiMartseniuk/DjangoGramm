@@ -7,6 +7,7 @@ from django.shortcuts import render
 from django.urls import reverse, reverse_lazy
 from django.views import View
 from django.views.generic import ListView, DetailView, CreateView, DeleteView, UpdateView
+from django.views.generic.detail import SingleObjectMixin
 from django.views.generic.edit import FormMixin
 
 from src.account.forms import CommentForm, PostCreateForm, EditProfileForm
@@ -28,16 +29,24 @@ def index(request):
     return render(request, 'base.html')
 
 
-class ProfileListView(LoginRequiredMixin, ListView):
-    """Profile user"""
+class ProfileListView(LoginRequiredMixin, SingleObjectMixin, ListView):
+    """Profile my user"""
     paginate_by = 6
     template_name = 'account/profile/profile_list.html'
+    slug_field = 'username'
+    slug_url_kwarg = 'username'
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object(queryset=CustomUser.objects.all())
+        return super(ProfileListView, self).get(request, *args, **kwargs)
 
     def get_queryset(self):
-        return self.request.user.posts.filter(status='published').all()
+        return self.object.posts.filter(status='published').all()
 
     def get_context_data(self, *, object_list=None, **kwargs):
-        kwargs['section'] = 'profile'
+        if self.object == self.request.user:
+            kwargs['section'] = 'profile'
+        kwargs['user'] = self.object
         return super(ProfileListView, self).get_context_data(**kwargs)
 
 
