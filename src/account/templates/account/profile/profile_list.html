@@ -1,28 +1,39 @@
 {% extends 'base.html' %}
 {% load static %}
 
+{% load account_tags %}
+
 {% block title %}Profile{% endblock %}
 {% block content %}
 <div class="row mt-4">
     <div class="col-3">
         <div class="text-center">
-            <img src="{%if request.user.avatar%} {{request.user.avatar.url}} {% else %} {% static 'img/images.png' %} {% endif %}" class="rounded-circle avatar_profile"  alt="">
+            <img src="{%if user.avatar%} {{user.avatar.url}} {% else %} {% static 'img/images.png' %} {% endif %}" class="rounded-circle avatar_profile"  alt="">
         </div>
     </div>
     <div class="col-6">
         <div class="row">
             <div class="col-6 text-center">
-                <h1>{{request.user.first_name}}</h1>
+                <h1>{{user.first_name}}</h1>
             </div>
             <div class="col-6 text-center">
-                <a href="{% url 'profile_edit' request.user.username %}" class="btn btn-outline-secondary">Edit profile</a>
+                {%if request.user == user%}
+                    <a href="{% url 'profile_edit' request.user.username %}" class="btn btn-outline-secondary">Edit profile</a>
+                {%else%}
+                    {% if_subscription user request.user as is_sub%}
+                    {%if  is_sub %}
+                        <button id="subscriptions_user" data-id_subscribe={{user.id}} class="btn btn-outline-secondary">Subscriptions</button>
+                    {%else%}
+                        <button id="subscribe_user" data-id_subscribe={{user.id}} class="btn btn-danger">Subscribe</button>
+                    {%endif%}
+                {%endif%}
             </div>
             <div class="row">
                 <div class="col-12">
                     <ul class="mt-5 custom_ul" >
                         <li class="custom_li font_ul">Publications {{object_list.count}}</li>
-                        <li class="custom_li font_ul li_menu" data-bs-toggle="modal" data-bs-target="#Subscribers">Followers {{request.user.rel_to_set.count}}  </li>
-                        <li id="total" class="custom_li font_ul li_menu" data-total_subscribe="{{request.user.rel_from_set.count}}" data-bs-toggle="modal" data-bs-target="#Subscription">Subscription {{request.user.rel_from_set.count}}</li>
+                        <li id="total_followers" class="custom_li font_ul li_menu" data-total_followers="{{user.rel_to_set.count}}" data-bs-toggle="modal" data-bs-target="#Subscribers">Followers {{user.rel_to_set.count}}  </li>
+                        <li id="total_subscription" class="custom_li font_ul li_menu" data-total_subscription="{{user.rel_from_set.count}}" data-bs-toggle="modal" data-bs-target="#Subscription">Subscription {{user.rel_from_set.count}}</li>
                     </ul>
                 </div>
             </div>
@@ -44,9 +55,16 @@
             </a>
         </div>
       </div>
+    {% empty %}
+        {%if request.user == user%}
+        <h4>No posts! <a href="{% url 'create_image' %}" class="link-secondary">Add a post</a></h4>
+        {%else%}
+        <h4>No posts!</h4>
+        {%endif%}
     {% endfor %}
 </div>
 <hr>
+
 <div class="m-3 aside">
      <nav aria-label="Page navigation example">
           <ul class="pagination">
@@ -74,20 +92,40 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-          {% for subscriber in request.user.rel_from_set.all %}
+          {% for subscriber in user.rel_from_set.all %}
              <div class="card mb-3">
               <div class="card-body ">
                   <div class="row">
                       <div class="col-2">
+                        {%if request.user == subscriber.user_to%}
+                        <img src="{{subscriber.user_to.avatar.url}}" class="rounded-circle avatar_subs" alt="">
+                        {%else%}
                           <a href="">
                               <img src="{{subscriber.user_to.avatar.url}}" class="rounded-circle avatar_subs" alt="">
                           </a>
+                        {%endif%}
                       </div>
                       <div class="col-6">
+                        {%if request.user == subscriber.user_to%}
+                            <p>{{subscriber.user_to.first_name}}</p>
+                        {%else%}
                           <a href="">{{subscriber.user_to.first_name}}</a>
+                        {%endif%}
                       </div>
-                      <div class="col-4">                                                
-                            <button id="subscriptions" data-id_subscribe={{subscriber.user_to.id}} class="btn btn-outline-secondary">Subscriptions</button>                       
+                      <div class="col-4">     
+                        {%if request.user == user%}                                          
+                            <button id="subscriptions" data-id_subscribe={{subscriber.user_to.id}} class="btn btn-outline-secondary">Subscriptions</button>   
+                        {%else%}
+                            {%if request.user == subscriber.user_to%}
+                            {%else%}
+                                {% if_subscription subscriber.user_to request.user as is_sub%}
+                                {%if  is_sub %}
+                                    <button id="subscriptions_user_w" data-id_subscribe={{subscriber.user_to.id}} class="btn btn-outline-secondary">Subscriptions</button>
+                                {%else%}
+                                    <button id="subscribe_user_w" data-id_subscribe={{subscriber.user_to.id}} class="btn btn-danger">Subscribe</button>
+                                {%endif%}
+                            {%endif%}
+                        {%endif%}
                             <!-- <button id="subscribe" class="btn btn-danger">Subscribe</button> -->   
                       </div>
                   </div>
@@ -109,20 +147,41 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-          {% for subscriber in request.user.rel_to_set.all %}
+          {% for subscriber in user.rel_to_set.all %}
              <div class="card mb-3">
               <div class="card-body ">
                   <div class="row">
                       <div class="col-2">
+                        {%if request.user == subscriber.user_from%}
+                            <img src="{{subscriber.user_from.avatar.url}}" class="rounded-circle avatar_subs" alt="">
+                        {%else%}
+                        
                           <a href="">
                               <img src="{{subscriber.user_from.avatar.url}}" class="rounded-circle avatar_subs" alt="">
                           </a>
+                        {%endif%}
                       </div>
                       <div class="col-6">
+                        {%if request.user == subscriber.user_from%}
+                            <p>{{subscriber.user_from.first_name}}</p>
+                        {%else%}
                           <a href="">{{subscriber.user_from.first_name}}</a>
+                        {%endif%}
                       </div>
                       <div class="col-4">
+                        {%if request.user == user%}  
                             <a href="{% url 'subscription_delete' subscriber.user_from.id%}" class="btn btn-outline-secondary">Delete</a>
+                        {%else%}
+                            {%if request.user == subscriber.user_from%}
+                            {%else%}
+                                {% if_subscription subscriber.user_from request.user as is_sub%}
+                                {%if  is_sub %}
+                                    <button id="subscriptions_user_w" data-id_subscribe={{subscriber.user_from.id}} class="btn btn-outline-secondary">Subscriptions</button>
+                                {%else%}
+                                    <button id="subscribe_user_w" data-id_subscribe={{subscriber.user_from.id}} class="btn btn-danger">Subscribe</button>
+                                {%endif%}
+                            {%endif%}
+                        {%endif%}
                       </div>
                   </div>
               </div>
