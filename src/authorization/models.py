@@ -30,5 +30,3 @@ class CustomUser(AbstractUser):
                                        related_name='followers',
                                        symmetrical=False)
 
-    def get_absolute_url(self):
-        return reverse('profile', kwargs={'slug': self.username})
