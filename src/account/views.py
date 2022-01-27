@@ -6,17 +6,16 @@ from django.contrib import messages
 from django.shortcuts import render
 from django.urls import reverse, reverse_lazy
 from django.views import View
-from django.views.generic import ListView, DetailView, CreateView, DeleteView, UpdateView
+from django.views.generic import ListView, DetailView, CreateView, DeleteView, UpdateView, TemplateView
 from django.views.generic.detail import SingleObjectMixin
-from django.views.generic.edit import FormMixin
+from django.views.generic.edit import FormMixin, FormView
+from django.http import JsonResponse
+from django.http import HttpResponseRedirect
 
 from src.account.forms import CommentForm, PostCreateForm, EditProfileForm
 from src.account.models import Post, Comment
 from src.authorization.models import CustomUser
-from django.http import JsonResponse
-from django.http import HttpResponseRedirect
-
-from src.base.services import like, subscription, delete_followers
+from src.base.services import like, subscription, delete_followers, get_search
 
 
 @login_required()
@@ -158,3 +157,16 @@ class CommentDeleteView(LoginRequiredMixin, DeleteView):
     def get_queryset(self):
         return self.request.user.comments.all()
 
+
+class SearchView(TemplateView):
+    """Search handler"""
+    template_name = 'account/search/search_list.html'
+
+    def get_queryset(self):
+        self.query = self.request.GET.get('query')
+        return get_search(self.query, CustomUser)
+
+    def get_context_data(self, **kwargs):
+        kwargs['list_user'] = self.get_queryset()
+        kwargs['query'] = self.query
+        return super(SearchView, self).get_context_data(**kwargs)
