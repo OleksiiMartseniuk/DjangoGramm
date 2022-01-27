@@ -4,15 +4,16 @@ from django.db.models import Model
 from django.template.loader import render_to_string
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode
+from django.contrib.postgres.search import TrigramSimilarity
 
 
 def get_path_upload_avatar(instance, file):
-    """Построения пути к файлу(avatar), format: (media)/avatar/user_id/photo.jpg"""
+    """Path file(avatar), format: (media)/avatar/user_id/photo.jpg"""
     return f'avatar/{instance.id}/{file}'
 
 
 def get_path_upload_image(instance, file):
-    """Построения пути к файлу(image), format: (media)/image/user_id/photo.jpg"""
+    """Path file (image), format: (media)/image/user_id/photo.jpg"""
     return f'image/{instance.owner.id}/{file}'
 
 
@@ -66,3 +67,9 @@ def delete_followers(request: object, user_id: int, model_user: Model):
     user_to = get_or_none(model_user, id=user_id)
     if user_to:
         user_to.following.remove(user_from)
+
+
+def get_search(query: str, model_user: Model):
+    return model_user.objects.annotate(
+        similarity=TrigramSimilarity('first_name', query),
+    ).filter(similarity__gt=0.3).order_by('-similarity')
