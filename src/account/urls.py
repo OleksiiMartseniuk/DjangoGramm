@@ -17,4 +17,6 @@ urlpatterns = [
     path('image/delete/<int:pk>/', views.PostDeleteView.as_view(), name='delete_image'),
     # Comment
     path('comment/delete/<int:pk>/', views.CommentDeleteView.as_view(), name='delete_comment'),
+    # Search
+    path('search/', views.SearchView.as_view(), name='search'),
 ]
