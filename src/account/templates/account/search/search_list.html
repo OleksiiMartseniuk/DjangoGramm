@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block title %}Search{% endblock %}
+
+{% block content %}
+<h3 class="mt-3">User containing "{{query}}"</h3>
+<hr>
+<h5>Found {{ list_user.count }} result{{ list_user.count|pluralize }} </h5>
+{% for user in list_user %}
+
+
+{%endfor%}
+{% endblock %}
