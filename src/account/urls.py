@@ -4,7 +4,7 @@ from src.account import views
 
 urlpatterns = [
     # Home
-    path('', views.index, name='home'),
+    path('', views.HomeListView.as_view(), name='home'),
     # Profile
     path('profile/subscription/', views.SubscriptionHandler.as_view(), name='subscription'),
     path('profile/subscription/delete/<int:user_id>/', views.FollowersHandler.as_view(), name='subscription_delete'),
