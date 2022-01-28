@@ -1,9 +1,7 @@
 import json
-from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib import messages
-from django.shortcuts import render
 from django.urls import reverse, reverse_lazy
 from django.views import View
 from django.views.generic import ListView, DetailView, CreateView, DeleteView, UpdateView, TemplateView
@@ -14,18 +12,21 @@ from django.http import HttpResponseRedirect
 
 from src.account.forms import CommentForm, PostCreateForm, EditProfileForm
 from src.account.models import Post, Comment
-from src.authorization.models import CustomUser
-from src.base.services import like, subscription, delete_followers, get_search
+from src.authorization.models import CustomUser, Contact
+from src.base.services import like, subscription, delete_followers, get_search, subscription_list
 
 
-@login_required()
-def index(request):
-    # user = CustomUser.objects.get(id=1)
-    # user2 = CustomUser.objects.get(id=2)
-    # user3 = CustomUser.objects.get(id=3)
-    # user.following.add(user3)
-    # user2.following.add(user)
-    return render(request, 'base.html')
+class HomeListView(LoginRequiredMixin, ListView):
+    """Home page"""
+    paginate_by = 6
+    template_name = 'account/home/home.html'
+
+    def get_queryset(self):
+        return Post.objects.filter(owner__in=subscription_list(Contact, self.request.user))
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        kwargs['section'] = 'home'
+        return super(HomeListView, self).get_context_data(**kwargs)
 
 
 class ProfileListView(LoginRequiredMixin, SingleObjectMixin, ListView):
