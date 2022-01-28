@@ -73,3 +73,11 @@ def get_search(query: str, model_user: Model):
     return model_user.objects.annotate(
         similarity=TrigramSimilarity('first_name', query),
     ).filter(similarity__gt=0.3).order_by('-similarity')
+
+
+def subscription_list(model_contacts: Model, user: object) -> list:
+    results_list = list()
+    contact_list_user = model_contacts.objects.filter(user_from=user).all()
+    for subscription in contact_list_user:
+        results_list.append(subscription.user_to)
+    return results_list
