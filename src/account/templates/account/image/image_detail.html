@@ -43,7 +43,7 @@
                           <h5>{{comment.owner.first_name}}</h5>
                           <hr>
                           <p class="text-secondary">{{comment.text}}</p>
-                          <p class="text-secondary time_style link-secondary">{{comment.create|date:"Y-m-d H:s"}}</p>
+                          <p class="text-secondary time_style link-secondary">{{comment.create|timesince}} ago</p>
                       </div>
                   </div>
               </div>
