@@ -1,5 +1,6 @@
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.mail import send_mail
+from django.conf import settings
 from django.db.models import Model, QuerySet
 from django.template.loader import render_to_string
 from django.utils.encoding import force_bytes
@@ -31,7 +32,7 @@ def sent_email_register(email: str, username: str, request: object):
     send_mail(subject='Registration email',
               message='One',
               html_message=massege,
-              from_email='DjangoGram@email.com',
+              from_email=settings.EMAIL_HOST_USER,
               recipient_list=[email])
 
 
