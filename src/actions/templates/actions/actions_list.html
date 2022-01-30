@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}Actions{% endblock %}
+
+{% block content %}
+
+<div class="col-md-6 offset-md-3 mt-3">
+    {%for action in object_list %}
+     <div class="card mb-3">
+          <div class="card-body ">
+              <div class="row">
+                  <div class="col-2">
+                      <a href="{% url 'profile' action.user.username %}">
+                          <img src="{{action.user.avatar.url}}" class="rounded-circle avatar_subs" alt="">
+                      </a>
+                  </div>
+                  <div class="col-2">
+                      {%if action.target.image%}
+                      <a href="{{action.target.get_absolute_url}}">
+                          <img src="{{action.target.image.url}}" class="rounded-0 avatar_subs" alt="">
+                      </a>
+                      {%elif action.target.avatar%}
+                      <a href="{% url 'profile' action.target.username %}">
+                          <img src="{{action.target.avatar.url}}" class="rounded-circle avatar_subs" alt="">
+                      </a>
+                      {%endif%}
+                  </div>
+                  <div class="col-8">
+                      <p class="time_style link-secondary">{{action.created|timesince}} ago</p>
+                      <p>
+                          <a href="{% url 'profile' action.user.username%}" class="link-secondary">{{action.user.first_name}}</a>
+                          {{ action.verb }}
+                          {%if action.target.title %}
+                          <a href="{{action.target.get_absolute_url}}" class="link-secondary">{{action.target.title}}</a>
+                          {%elif action.target.first_name %}
+                          <a href="{% url 'profile' action.target.username%}" class="link-secondary">{{action.target.first_name}}</a>
+                          {%endif%}
+                      </p>
+                  </div>
+
+              </div>
+          </div>
+     </div>
+     {%endfor%}
+</div>
+
+{% endblock %}
