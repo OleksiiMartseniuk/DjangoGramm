@@ -6,6 +6,9 @@ from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode
 from django.contrib.postgres.search import TrigramSimilarity
 
+from src.actions.utils import create_action
+from src.base import constants
+
 
 def get_path_upload_avatar(instance, file):
     """Path file(avatar), format: (media)/avatar/user_id/photo.jpg"""
@@ -44,6 +47,8 @@ def like(data: dict, request: object, model_post: Model) -> dict:
         return {'status': 'error'}
     if data['action'] == 'like':
         post.like.add(request.user)
+        # add actions like
+        create_action(request.user, constants.LIKES, post)
         return {'status': 'ok'}
     elif data['action'] == 'unlike':
         post.like.remove(request.user)
@@ -55,6 +60,8 @@ def subscription(data: dict, request: object, model_user: Model) -> dict:
     user_to = model_user.objects.get(id=data['id'])
     if data['status']:
         user_from.following.add(user_to)
+        # add actions following
+        create_action(user_from, constants.FOLLOWING, user_to)
         return {'status': 'ok'}
     elif not data['status']:
         user_from.following.remove(user_to)
@@ -74,10 +81,3 @@ def get_search(query: str, model_user: Model):
         similarity=TrigramSimilarity('first_name', query),
     ).filter(similarity__gt=0.3).order_by('-similarity')
 
-
-def subscription_list(model_contacts: Model, user: object) -> list:
-    results_list = list()
-    contact_list_user = model_contacts.objects.filter(user_from=user).all()
-    for subscription in contact_list_user:
-        results_list.append(subscription.user_to)
-    return results_list

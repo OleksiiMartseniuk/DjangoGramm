@@ -12,6 +12,7 @@ from django.http import HttpResponseRedirect
 
 from src.account.forms import CommentForm, PostCreateForm, EditProfileForm
 from src.account.models import Post, Comment
+from src.actions.utils import create_action
 from src.authorization.models import CustomUser
 from src.base import constants
 from src.base.services import like, subscription, delete_followers, get_search
@@ -90,7 +91,12 @@ class PostCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
         initial = super().get_initial()
         initial['owner'] = self.request.user
         return initial
-
+    
+    def get_success_url(self):
+        # add actions image
+        create_action(self.request.user, constants.IMAGE, self.object)
+        return super(PostCreateView, self).get_success_url()
+        
     def get_context_data(self, **kwargs):
         kwargs['section'] = 'create'
         return super(PostCreateView, self).get_context_data(**kwargs)
