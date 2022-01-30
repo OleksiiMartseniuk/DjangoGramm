@@ -1,6 +1,6 @@
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.mail import send_mail
-from django.db.models import Model
+from django.db.models import Model, QuerySet
 from django.template.loader import render_to_string
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode
@@ -21,6 +21,7 @@ def get_path_upload_image(instance, file):
 
 
 def sent_email_register(email: str, username: str, request: object):
+    """Sending email"""
     current_site = get_current_site(request)
     massege = render_to_string('authorization/registration/register_email.html', {
         'username': username,
@@ -35,6 +36,7 @@ def sent_email_register(email: str, username: str, request: object):
 
 
 def get_or_none(class_model: Model, **kwargs: dict):
+    """Check objects exists"""
     try:
         return class_model.objects.get(**kwargs)
     except class_model.DoesNotExist:
@@ -42,6 +44,7 @@ def get_or_none(class_model: Model, **kwargs: dict):
 
 
 def like(data: dict, request: object, model_post: Model) -> dict:
+    """Handler like"""
     post = get_or_none(model_post, id=data['id'])
     if post is None:
         return {'status': 'error'}
@@ -56,6 +59,7 @@ def like(data: dict, request: object, model_post: Model) -> dict:
 
 
 def subscription(data: dict, request: object, model_user: Model) -> dict:
+    """Handler subscription"""
     user_from = request.user
     user_to = model_user.objects.get(id=data['id'])
     if data['status']:
@@ -70,13 +74,15 @@ def subscription(data: dict, request: object, model_user: Model) -> dict:
 
 
 def delete_followers(request: object, user_id: int, model_user: Model):
+    """Delete followers"""
     user_from = request.user
     user_to = get_or_none(model_user, id=user_id)
     if user_to:
         user_to.following.remove(user_from)
 
 
-def get_search(query: str, model_user: Model):
+def get_search(query: str, model_user: Model) -> QuerySet:
+    """QuerySet search"""
     return model_user.objects.annotate(
         similarity=TrigramSimilarity('first_name', query),
     ).filter(similarity__gt=0.3).order_by('-similarity')
