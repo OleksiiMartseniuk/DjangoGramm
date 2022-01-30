@@ -33,6 +33,11 @@ class UserRegisterForm(UserCreationForm):
 
 
 class ProfileCreateForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(ProfileCreateForm, self).__init__(*args, **kwargs)
+        self.fields['first_name'].widget.attrs.update({'required': True})
+        self.fields['last_name'].widget.attrs.update({'required': True})
+
     class Meta:
         model = CustomUser
         fields = ('first_name', 'last_name', 'bio', 'avatar', 'activ_email',)
