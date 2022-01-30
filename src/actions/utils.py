@@ -5,6 +5,7 @@ from .models import Action
 
 
 def create_action(user: object, verb: str, target=None) -> bool:
+    """Create object action"""
     now = timezone.now()
     last_minute = now - datetime.timedelta(seconds=60)
     similar_actions = Action.objects.filter(user_id=user.id, verb=verb,

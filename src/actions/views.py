@@ -5,6 +5,7 @@ from src.actions.models import Action
 
 
 class ActionListView(LoginRequiredMixin, ListView):
+    """Action page"""
     paginate_by = 10
     template_name = 'actions/actions_list.html'
 
