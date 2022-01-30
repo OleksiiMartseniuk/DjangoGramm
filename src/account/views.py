@@ -6,9 +6,10 @@ from django.urls import reverse, reverse_lazy
 from django.views import View
 from django.views.generic import ListView, DetailView, CreateView, DeleteView, UpdateView, TemplateView
 from django.views.generic.detail import SingleObjectMixin
-from django.views.generic.edit import FormMixin, FormView
+from django.views.generic.edit import FormMixin
 from django.http import JsonResponse
 from django.http import HttpResponseRedirect
+from django.db.models import Count
 
 from src.account.forms import CommentForm, PostCreateForm, EditProfileForm
 from src.account.models import Post, Comment
@@ -29,6 +30,7 @@ class HomeListView(LoginRequiredMixin, ListView):
 
     def get_context_data(self, *, object_list=None, **kwargs):
         kwargs['section'] = 'home'
+        kwargs['recommendations_list'] = CustomUser.objects.alias(followings=Count('following')).order_by('-followings')
         return super(HomeListView, self).get_context_data(**kwargs)
 
 
