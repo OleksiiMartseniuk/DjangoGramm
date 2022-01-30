@@ -6,6 +6,7 @@ from django.views.generic import TemplateView
 
 from .models import CustomUser
 from .forms import UserRegisterForm, ProfileCreateForm
+from ..base import constants
 from ..base.services import sent_email_register
 
 
@@ -32,7 +33,7 @@ class ProfileEdit(SuccessMessageMixin, UpdateView):
     form_class = ProfileCreateForm
     template_name = 'authorization/profile/profile_create.html'
     success_url = reverse_lazy('login')
-    success_message = 'Data saved'
+    success_message = constants.PROFILE_EDIT
 
     def get_object(self, queryset=None):
         username = urlsafe_base64_decode(self.kwargs['uidb64'])

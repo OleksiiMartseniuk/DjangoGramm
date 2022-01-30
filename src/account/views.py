@@ -12,8 +12,9 @@ from django.http import HttpResponseRedirect
 
 from src.account.forms import CommentForm, PostCreateForm, EditProfileForm
 from src.account.models import Post, Comment
-from src.authorization.models import CustomUser, Contact
-from src.base.services import like, subscription, delete_followers, get_search, subscription_list
+from src.authorization.models import CustomUser
+from src.base import constants
+from src.base.services import like, subscription, delete_followers, get_search
 
 
 class HomeListView(LoginRequiredMixin, ListView):
@@ -22,7 +23,8 @@ class HomeListView(LoginRequiredMixin, ListView):
     template_name = 'account/home/home.html'
 
     def get_queryset(self):
-        return Post.objects.filter(owner__in=subscription_list(Contact, self.request.user))
+        following_ids = self.request.user.following.values_list('id', flat=True)
+        return Post.objects.filter(owner_id__in=following_ids)
 
     def get_context_data(self, *, object_list=None, **kwargs):
         kwargs['section'] = 'home'
@@ -54,7 +56,7 @@ class EditProfileUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView)
     """Edit profile user"""
     form_class = EditProfileForm
     template_name = 'account/profile/profile_edit.html'
-    success_message = 'Profile updated'
+    success_message = constants.EDIT_PROFILE
 
     def get_object(self, queryset=None):
         return self.request.user
@@ -82,7 +84,7 @@ class PostCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     form_class = PostCreateForm
     template_name = 'account/image/image_create.html'
     success_url = reverse_lazy('home')
-    success_message = 'Image add'
+    success_message = constants.POST_CREATE
 
     def get_initial(self):
         initial = super().get_initial()
