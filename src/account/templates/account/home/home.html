@@ -6,6 +6,7 @@
 {% block title %}Home{% endblock %}
 
 {% block content %}
+{% csrf_token %}
 
 <div class="col-md-6 offset-md-3 mt-3">
 {% for post in object_list%}
@@ -69,7 +70,9 @@
                   </div>
             </div>
             {%endif%}
+
         {%endfor%}
+            <script src="{% static 'js/search.js'%}" ></script>
         </div>
 
 
@@ -93,7 +96,5 @@
 </div>
 </div>
 
-{% csrf_token %}
-<script src="{% static 'js/search.js'%}" ></script>
 <script src="{% static 'js/like.js'%}" ></script>
 {% endblock %}
