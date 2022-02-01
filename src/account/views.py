@@ -30,7 +30,8 @@ class HomeListView(LoginRequiredMixin, ListView):
 
     def get_context_data(self, *, object_list=None, **kwargs):
         kwargs['section'] = 'home'
-        kwargs['recommendations_list'] = CustomUser.objects.alias(followings=Count('following')).order_by('-followings')
+        if self.request.user.following:
+            kwargs['recommendations_list'] = CustomUser.objects.alias(followings=Count('following')).order_by('-followings')
         return super(HomeListView, self).get_context_data(**kwargs)
 
 
