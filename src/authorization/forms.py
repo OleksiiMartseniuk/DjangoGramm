@@ -5,6 +5,7 @@ from django.core.exceptions import ValidationError
 
 from src.authorization.models import CustomUser
 from src.base.services import get_or_none, sent_email_register
+from src.base import constants
 
 
 class LoginForm(AuthenticationForm):
@@ -22,7 +23,7 @@ class LoginForm(AuthenticationForm):
                 sent_email_register(email=user.email,
                                     username=user.username,
                                     request=self._request)
-                raise ValidationError('An email has been resent to you. Follow the link to complete registration')
+                raise ValidationError(constants.RAIS_LOGINFORM)
         super(LoginForm, self).clean()
 
 

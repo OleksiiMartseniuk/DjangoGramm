@@ -9,3 +9,6 @@ POST_CREATE = 'Image add'
 IMAGE = 'added a image'
 LIKES = 'likes'
 FOLLOWING = 'is following'
+
+# error
+RAIS_LOGINFORM = 'An email has been resent to you. Follow the link to complete registration'
