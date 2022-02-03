@@ -105,10 +105,10 @@
                   <div class="row">
                       <div class="col-2">
                         {%if request.user == subscriber.user_to%}
-                        <img src="{{subscriber.user_to.avatar.url}}" class="rounded-circle avatar_subs" alt="">
+                        <img src="{%if subscriber.user_to.avatar%} {{subscriber.user_to.avatar.url}} {% else %} {% static 'img/images.png' %} {% endif %}" class="rounded-circle avatar_subs" alt="">
                         {%else%}
                           <a href="{% url 'profile' subscriber.user_to.username %}">
-                              <img src="{{subscriber.user_to.avatar.url}}" class="rounded-circle avatar_subs" alt="">
+                              <img src="{%if subscriber.user_to.avatar%} {{subscriber.user_to.avatar.url}} {% else %} {% static 'img/images.png' %} {% endif %}" class="rounded-circle avatar_subs" alt="">
                           </a>
                         {%endif%}
                       </div>
@@ -160,11 +160,11 @@
                   <div class="row">
                       <div class="col-2">
                         {%if request.user == subscriber.user_from%}
-                            <img src="{{subscriber.user_from.avatar.url}}" class="rounded-circle avatar_subs" alt="">
+                            <img src="{%if subscriber.user_from.avatar%} {{subscriber.user_from.avatar.url}} {% else %} {% static 'img/images.png' %} {% endif %}" class="rounded-circle avatar_subs" alt="">
                         {%else%}
                         
                           <a href="{% url 'profile' subscriber.user_from.username %}">
-                              <img src="{{subscriber.user_from.avatar.url}}" class="rounded-circle avatar_subs" alt="">
+                              <img src="{%if subscriber.user_from.avatar%} {{subscriber.user_from.avatar.url}} {% else %} {% static 'img/images.png' %} {% endif %}" class="rounded-circle avatar_subs" alt="">
                           </a>
                         {%endif%}
                       </div>
