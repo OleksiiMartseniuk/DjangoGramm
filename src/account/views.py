@@ -170,7 +170,7 @@ class CommentDeleteView(LoginRequiredMixin, DeleteView):
         return self.request.user.comments.all()
 
 
-class SearchView(TemplateView):
+class SearchView(LoginRequiredMixin, TemplateView):
     """Search handler"""
     template_name = 'account/search/search_list.html'
 
