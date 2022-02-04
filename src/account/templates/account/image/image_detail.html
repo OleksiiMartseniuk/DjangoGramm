@@ -32,7 +32,7 @@
               <div class="card-body ">
                   <div class="row">
                       <div class="col-2">
-                          <img src="{{comment.owner.avatar.url}}" class="rounded-circle avatar_base" alt="">
+                          <img src="{%if comment.owner.avatar%} {{comment.owner.avatar.url}} {% else %} {% static 'img/images.png' %} {% endif %}" class="rounded-circle avatar_base" alt="">
                       </div>
                       <div class="col-10">
                           {% if comment.owner == request.user%}
