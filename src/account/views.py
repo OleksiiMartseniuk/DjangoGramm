@@ -26,7 +26,7 @@ class HomeListView(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         following_ids = self.request.user.following.values_list('id', flat=True)
-        return Post.objects.filter(owner_id__in=following_ids).order_by('-create')
+        return Post.objects.filter(owner_id__in=following_ids, status='published').order_by('-create')
 
     def get_context_data(self, *, object_list=None, **kwargs):
         kwargs['section'] = 'home'
