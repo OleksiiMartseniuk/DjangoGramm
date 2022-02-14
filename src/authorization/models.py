@@ -1,7 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
-from django.urls import reverse
 
+from src.actions.utils import create_action
+from src.base import constants
 from src.base.services import get_path_upload_avatar
 
 
@@ -30,3 +31,18 @@ class CustomUser(AbstractUser):
                                        related_name='followers',
                                        symmetrical=False)
 
+    def subscription(self, data: dict, user_to: object) -> dict:
+        """Handler subscription"""
+        if data['status']:
+            self.following.add(user_to)
+            # add actions following
+            create_action(self, constants.FOLLOWING, user_to)
+            return {'status': 'ok'}
+        elif not data['status']:
+            self.following.remove(user_to)
+            return {'status': 'ok'}
+        return {'status': 'error'}
+
+    def delete_followers(self, user: object):
+        """Delete followers"""
+        self.following.remove(user)
