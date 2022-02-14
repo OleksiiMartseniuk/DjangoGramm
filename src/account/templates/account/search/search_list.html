@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load account_tags %}
+
+{% block title %}Search{% endblock %}
+
+{% block content %}
+<div class="container">
+<div class="row">
+    <div class="col-md-6 offset-md-3">
+        <h3 class="mt-3">User containing "{{query}}"</h3>
+        <hr>
+        <h5>Found {{ list_user.count }} result{{ list_user.count|pluralize }} </h5>
+        <div class="modal-body">
+        {% for user in list_user %}
+            <div class="card mb-3">
+                  <div class="card-body ">
+                      <div class="row">
+                          <div class="col-2">
+                            {%if request.user == user%}
+                                <img src="{%if user.avatar %} {{user.avatar.url}} {% else %} {% static 'img/images.png' %} {% endif %}" class="rounded-circle avatar_subs" alt="">
+                            {%else%}
+                              <a href="{% url 'profile' user.username %}">
+                                  <img src="{%if user.avatar %} {{user.avatar.url}} {% else %} {% static 'img/images.png' %} {% endif %}" class="rounded-circle avatar_subs" alt="">
+                              </a>
+                            {%endif%}
+                          </div>
+                          <div class="col-5">
+                            {%if request.user == user%}
+                                <p>{{user.first_name}}</p>
+                            {%else%}
+                              <a href="{% url 'profile' user.username %}">{{user.first_name}}</a>
+                            {%endif%}
+                          </div>
+                          <div class="col-5">
+                            {%if request.user == user%}
+                            {%else%}
+                                {% if_subscription user request.user as is_sub%}
+                                {%if  is_sub %}
+                                    <button id="subscriptions_user_w" data-id_subscribe={{user.id}} class="btn btn-outline-secondary">Subscriptions</button>
+                                {%else%}
+                                    <button id="subscribe_user_w" data-id_subscribe={{user.id}} class="btn btn-danger">Subscribe</button>
+                                {%endif%}
+                            {%endif%}
+
+                          </div>
+                      </div>
+                  </div>
+            </div>
+        {%endfor%}
+        </div>
+
+        </div>
+    </div>
+</div>
+
+{% csrf_token %}
+<script src="{% static 'js/search.js'%}" ></script>
+{% endblock %}

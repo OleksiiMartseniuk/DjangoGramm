@@ -1,0 +1,63 @@
+.custom_ul {
+    font-size:0;
+}
+.custom_li{
+    font-size:14px;
+    display:inline-block;
+    width:33%;
+    margin:0;
+    padding:0;
+}
+
+.avatar_base {
+    height:30px;
+    width:30px;
+}
+
+.avatar_base_home {
+    height:50px;
+    width:50px;
+}
+
+.avatar_profile {
+    height: 150px;
+    width: 150px;
+}
+
+@media screen and (min-width: 200px) and (max-width: 600px){
+    .avatar_profile{
+        height: 77px;
+        width: 77px;
+    }
+    .font_ul{
+        font-size:10px;
+    }
+}
+
+.image {
+    opacity: 1;
+}
+.image:hover {
+    opacity: .60;
+}
+
+.image_detail {
+    height: 800px;
+}
+
+.aside {
+    float: right;
+}
+
+.avatar_subs {
+    height:50px;
+    width:50px;
+}
+
+.li_menu {
+    cursor: pointer;
+}
+
+.time_style{
+    font-size: 14px;
+}
