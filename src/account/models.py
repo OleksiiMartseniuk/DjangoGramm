@@ -4,7 +4,26 @@ from django.utils.text import slugify
 
 from django.conf import settings
 
+from src.actions.utils import create_action
+from src.base import constants
 from src.base.services import get_path_upload_image
+
+
+class GetOrNoneManager(models.Manager):
+    """Adds get_or_none method to objects"""
+    def get_or_none(self, **kwargs):
+        try:
+            return self.get(**kwargs)
+        except self.model.DoesNotExist:
+            return None
+
+
+class PostManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().filter(status='published')
+
+    def get_home(self, following_ids: list):
+        return self.filter(owner_id__in=following_ids).order_by('-create')
 
 
 class Post(models.Model):
@@ -28,6 +47,9 @@ class Post(models.Model):
                               choices=STATUS_CHOICES,
                               default='published')
 
+    published = PostManager()
+    objects = GetOrNoneManager()
+
     def __str__(self):
         return self.title
 
@@ -38,6 +60,17 @@ class Post(models.Model):
 
     def get_absolute_url(self):
         return reverse('detail_image', kwargs={'slug': self.slug})
+
+    def handler_like(self, user: object, data: dict) -> dict:
+        """Handler like"""
+        if data['action'] == 'like':
+            self.like.add(user)
+            # add actions like
+            create_action(user, constants.LIKES, self)
+            return {'status': 'ok'}
+        elif data['action'] == 'unlike':
+            self.like.remove(user)
+            return {'status': 'ok'}
 
     class Meta:
         ordering = ['create']
