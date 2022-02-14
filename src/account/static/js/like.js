@@ -25,12 +25,14 @@
             event.target.classList.remove('btn-outline-secondary');
             event.target.classList.add('btn-danger');
             event.target.innerHTML = 'Like ' + (Number(total) + 1);
+            event.target.attributes[3].textContent = (Number(total) + 1);
           }
           if (action === 'unlike'){
             event.target.attributes[2].textContent = 'like';    
             event.target.classList.remove('btn-danger');
             event.target.classList.add('btn-outline-secondary');
             event.target.innerHTML = 'Like ' + (Number(total) - 1);
+            event.target.attributes[3].textContent = (Number(total) - 1);
           }
         }
       });
