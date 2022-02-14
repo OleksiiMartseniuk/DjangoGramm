@@ -6,3 +6,4 @@ media/*
 __pycache__
 .coverage
 htmlcov
+config/settings_dev.py
