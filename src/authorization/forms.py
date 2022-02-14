@@ -4,7 +4,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.core.exceptions import ValidationError
 
 from src.authorization.models import CustomUser
-from src.base.services import get_or_none, sent_email_register
+from src.base.services import sent_email_register
 from src.base import constants
 
 
@@ -17,7 +17,7 @@ class LoginForm(AuthenticationForm):
 
     def clean(self):
         username = self.cleaned_data.get('username')
-        user = get_or_none(CustomUser, username=username) or get_or_none(CustomUser, email=username)
+        user = CustomUser.objects.filter(username=username).first() or CustomUser.objects.get(email=username).first()
         if user:
             if not user.activ_email:
                 sent_email_register(email=user.email,
