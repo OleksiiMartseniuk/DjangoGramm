@@ -16,7 +16,7 @@ from src.account.models import Post, Comment
 from src.actions.utils import create_action
 from src.authorization.models import CustomUser
 from src.base import constants
-from src.base.services import like, subscription, delete_followers, get_search
+from src.base.services import get_search
 
 
 class HomeListView(LoginRequiredMixin, ListView):
@@ -26,7 +26,7 @@ class HomeListView(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         following_ids = self.request.user.following.values_list('id', flat=True)
-        return Post.objects.filter(owner_id__in=following_ids, status='published').order_by('-create')
+        return Post.published.get_home(following_ids)
 
     def get_context_data(self, *, object_list=None, **kwargs):
         kwargs['section'] = 'home'
@@ -73,13 +73,17 @@ class SubscriptionHandler(LoginRequiredMixin, View):
     """Handler button subscription"""
     def post(self, request, *args, **kwargs):
         data = json.loads(request.body)
-        return JsonResponse(subscription(data, request, CustomUser))
+        user_from = request.user
+        user_to = CustomUser.objects.get(id=data['id'])
+        return JsonResponse(user_from.subscription(data, user_to))
 
 
 class FollowersHandler(LoginRequiredMixin, View):
     """Handler button followers"""
     def get(self, request, *args, **kwargs):
-        delete_followers(request, kwargs['user_id'], CustomUser)
+        user_from = request.user
+        user_to = CustomUser.objects.get(id=kwargs['user_id'])
+        user_to.delete_followers(user_from)
         return HttpResponseRedirect(reverse('profile', kwargs={'username': self.request.user.username}))
 
 
@@ -154,7 +158,10 @@ class LikeImageHandler(LoginRequiredMixin, View):
     """Handler button like"""
     def post(self, request, *args, **kwargs):
         data = json.loads(request.body)
-        return JsonResponse(like(data, request, Post))
+        post = Post.objects.get_or_none(id=data['id'])
+        if post is None:
+            return JsonResponse({'status': 'error'})
+        return JsonResponse(post.handler_like(request.user, data))
 
 
 class CommentDeleteView(LoginRequiredMixin, DeleteView):
@@ -173,6 +180,7 @@ class CommentDeleteView(LoginRequiredMixin, DeleteView):
 class SearchView(LoginRequiredMixin, TemplateView):
     """Search handler"""
     template_name = 'account/search/search_list.html'
+    query = ''
 
     def get_queryset(self):
         self.query = self.request.GET.get('query')
