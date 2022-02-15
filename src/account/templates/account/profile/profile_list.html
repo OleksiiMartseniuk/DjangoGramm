@@ -37,11 +37,19 @@
             </div>
             <div class="row">
                 <div class="col-12">
-                    <ul class="mt-5 custom_ul" >
-                        <li class="custom_li font_ul">Publications {{object_list.count}}</li>
-                        <li id="total_followers" class="custom_li font_ul li_menu" data-total_followers="{{user.rel_to_set.count}}" data-bs-toggle="modal" data-bs-target="#Subscribers">Followers {{user.rel_to_set.count}}  </li>
-                        <li id="total_subscription" class="custom_li font_ul li_menu" data-total_subscription="{{user.rel_from_set.count}}" data-bs-toggle="modal" data-bs-target="#Subscription">Subscription {{user.rel_from_set.count}}</li>
-                    </ul>
+
+                    <div class="row g-0 mt-5">
+                        <div class="col-sm-4 col-md-4">
+                            <p>Publications {{object_list.count}}</p>
+                        </div>
+                        <div class="col-sm-4 col-md-4">
+                            <p id="total_followers" class="li_menu" data-total_followers="{{user.rel_to_set.count}}" data-bs-toggle="modal" data-bs-target="#Subscribers">Followers {{user.rel_to_set.count}}</p>
+                        </div>
+                        <div class="col-sm-4 col-md-4">
+                            <p id="total_subscription" class="li_menu" data-total_subscription="{{user.rel_from_set.count}}" data-bs-toggle="modal" data-bs-target="#Subscription">Subscription {{user.rel_from_set.count}}</p>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </div>
