@@ -17,7 +17,7 @@ class LoginForm(AuthenticationForm):
 
     def clean(self):
         username = self.cleaned_data.get('username')
-        user = CustomUser.objects.filter(username=username).first() or CustomUser.objects.get(email=username).first()
+        user = CustomUser.objects.filter(username=username).first() or CustomUser.objects.filter(email=username).first()
         if user:
             if not user.activ_email:
                 sent_email_register(email=user.email,
