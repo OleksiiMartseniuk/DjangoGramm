@@ -162,7 +162,7 @@ SOCIAL_AUTH_PIPELINE = (
     'social_core.pipeline.user.get_username',
     'social_core.pipeline.user.create_user',
 
-    # 'src.authorization.path.to.save_activ_email',
+    'src.authorization.path.to.save_activ_email',
 
     'social_core.pipeline.social_auth.associate_user',
     'social_core.pipeline.social_auth.load_extra_data',
