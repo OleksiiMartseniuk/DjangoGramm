@@ -7,7 +7,7 @@
 {% block content %}
     <div class="container mt-2">
          <div class="row">
-             <div>
+             <div class="col-8">
                 <h1>Log-in</h1>
                 {% if form.errors %}
                     <p>Your username and password didn't match.Please try again.</p>
@@ -24,6 +24,12 @@
                      <a  href="{% url 'password_reset' %}">Forgotten your password?</a><br>
                      <a href="{% url 'register' %}">Register</a>
                  </p>
+             </div>
+             <div class="col-4">
+                 <div class="d-grid gap-2 mt-5">
+                      <a href="{% url 'social:begin' 'google-oauth2' %}" class="btn btn-outline-danger" type="button">Google</a>
+                      <a href="{% url 'social:begin' 'github' %}" class="btn btn-outline-secondary" type="button">GitHub</a>
+                 </div>
              </div>
          </div>
     </div>
